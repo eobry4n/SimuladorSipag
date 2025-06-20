@@ -1,825 +1,865 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Simulador de Economia de Taxas</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulador de Economia de Taxas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #003641 10%, #7db61c 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #003641 10%, #7db61c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
 
-    .header {
-      background: linear-gradient(135deg, #00ae9d 0%, #49479d 100%);
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-    }
+        .header {
+            background: linear-gradient(135deg, #00ae9d 0%, #49479d 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
 
-    .header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-    .header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
 
-    .content {
-      padding: 40px 30px;
-    }
+        .content {
+            padding: 40px 30px;
+        }
 
-    .section {
-      margin-bottom: 40px;
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
 
-    .section h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .section h2::before {
-      content: '';
-      width: 4px;
-      height: 25px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 2px;
-    }
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-    .input-group {
-      margin-bottom: 20px;
-    }
+        .input-group {
+            margin-bottom: 20px;
+        }
 
-    .input-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-      font-size: 0.95rem;
-    }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
 
-    .input-wrapper {
-      position: relative;
-    }
+        .input-wrapper {
+            position: relative;
+        }
 
-    .input-wrapper input {
-      width: 100%;
-      padding: 12px 15px;
-      font-size: 1rem;
-      border: 2px solid #e1e5e9;
-      border-radius: 10px;
-      background: #f8f9fa;
-      transition: all 0.3s ease;
-      outline: none;
-    }
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            outline: none;
+        }
 
-    .input-wrapper input:focus {
-      border-color: #667eea;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
+        .input-wrapper input:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-    .input-wrapper.currency::before {
-      content: 'R$';
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #667eea;
-      font-weight: 600;
-      z-index: 1;
-    }
+        .input-wrapper.currency::before {
+            content: 'R$';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-weight: 600;
+            z-index: 1;
+        }
 
-    .input-wrapper.currency input {
-      padding-left: 35px;
-    }
+        .input-wrapper.currency input {
+            padding-left: 35px;
+        }
 
-    .input-wrapper.percentage::after {
-      content: '%';
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #667eea;
-      font-weight: 600;
-    }
+        .input-wrapper.percentage::after {
+            content: '%';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-weight: 600;
+        }
 
-    .input-wrapper.percentage input {
-      padding-right: 35px;
-    }
+        .input-wrapper.percentage input {
+            padding-right: 35px;
+        }
 
-    .rate-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-    }
+        .rate-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
 
-    .rate-column {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 12px;
-      border: 2px solid #e9ecef;
-    }
+        .rate-column {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+        }
 
-    .rate-column.competitor {
-      border-color: #dc3545;
-    }
+        .rate-column.competitor {
+            border-color: #dc3545;
+        }
 
-    .rate-column.ours {
-      border-color: #28a745;
-    }
+        .rate-column.ours {
+            border-color: #28a745;
+        }
 
-    .rate-column h3 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      padding: 10px;
-      border-radius: 8px;
-      color: white;
-    }
+        .rate-column h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
 
-    .rate-column.competitor h3 {
-      background: #dc3545;
-    }
+        .rate-column.competitor h3 {
+            background: #dc3545;
+        }
 
-    .rate-column.ours h3 {
-      background: #28a745;
-    }
+        .rate-column.ours h3 {
+            background: #28a745;
+        }
 
-    .calculate-btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
 
-    .calculate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-    }
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
 
-    .calculate-btn:active {
-      transform: translateY(0);
-    }
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
 
-    .result {
-      margin-top: 30px;
-      padding: 25px;
-      border-radius: 15px;
-      text-align: center;
-      font-size: 1.1rem;
-      line-height: 1.8;
-      transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(20px);
-    }
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-    .result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    .result.positive {
-      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-      color: #155724;
-      border: 2px solid #c3e6cb;
-    }
+        .result.positive {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
 
-    .result.negative {
-      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-      color: #721c24;
-      border: 2px solid #f5c6cb;
-    }
+        .result.negative {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
 
-    .result-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 10px 0;
-    }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
 
-    .result-icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
+        .result-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
 
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-    .summary-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      border-left: 4px solid #667eea;
-    }
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
 
-    .summary-card h4 {
-      color: #333;
-      margin-bottom: 10px;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+        .summary-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-    .summary-card .value {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #667eea;
-    }
+        .summary-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
 
-    .clear-btn {
-      background: #6c757d;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      transition: all 0.3s ease;
-    }
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
 
-    .clear-btn:hover {
-      background: #5a6268;
-    }
+        .clear-btn:hover {
+            background: #5a6268;
+        }
 
-    @media (max-width: 768px) {
-      .grid-2, .rate-columns {
-        grid-template-columns: 1fr;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .content {
-        padding: 20px 15px;
-      }
-      
-      .section {
-        padding: 20px 15px;
-      }
-    }
+        @media (max-width: 768px) {
+            .grid-2, .rate-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .section {
+                padding: 20px 15px;
+            }
+        }
 
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      cursor: help;
-    }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
 
-    .tooltip::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #333;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      z-index: 1000;
-    }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
 
-    .tooltip:hover::after {
-      opacity: 1;
-    }
-  </style>
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>💰 Simulador de Economia Sicoob</h1>
-      <p>Compare taxas e descubra quanto você pode economizar</p>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Simulador de Economia Sicoob</h1>
+            <p>Compare taxas e descubra quanto você pode economizar</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>📊 Faturamento Mensal</h2>
+                <div class="grid-4">
+                    <div class="input-group">
+                        <label for="fatDebito">Cartão de Débito</label>
+                        <div class="input-wrapper currency">
+                            <input type="text" id="fatDebito" placeholder="0,00" data-type="currency">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="fatCredVista">Crédito à Vista</label>
+                        <div class="input-wrapper currency">
+                            <input type="text" id="fatCredVista" placeholder="0,00" data-type="currency">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="fatCred26">Crédito 2-6x <span class="tooltip" data-tooltip="Parcelamento de 2 a 6 vezes">ℹ️</span></label>
+                        <div class="input-wrapper currency">
+                            <input type="text" id="fatCred26" placeholder="0,00" data-type="currency">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="fatCred712">Crédito 7-12x <span class="tooltip" data-tooltip="Parcelamento de 7 a 12 vezes">ℹ️</span></label>
+                        <div class="input-wrapper currency">
+                            <input type="text" id="fatCred712" placeholder="0,00" data-type="currency">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="fatPix">Faturamento Pix</label>
+                        <div class="input-wrapper currency">
+                            <input type="text" id="fatPix" placeholder="0,00" data-type="currency">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🖥️ Aluguel de Equipamentos</h2>
+                <div class="rate-columns">
+                    <div class="rate-column competitor">
+                        <h3>🏢 Concorrente</h3>
+                        <div class="input-group">
+                            <label for="qeConc">Quantidade de Equipamentos</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="qeConc" placeholder="0" min="0">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="veConc">Valor por Equipamento/Mês</label>
+                            <div class="input-wrapper currency">
+                                <input type="text" id="veConc" placeholder="0,00" data-type="currency">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="totalEquipConc">Total Mensal Equipamentos</label>
+                            <div class="input-wrapper currency">
+                                <input type="text" id="totalEquipConc" placeholder="0,00" readonly style="background: #e9ecef; cursor: not-allowed;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rate-column ours">
+                        <h3>🚀 Nossa Proposta</h3>
+                        <div class="input-group">
+                            <label for="qeNos">Quantidade de Equipamentos</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="qeNos" placeholder="0" min="0">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="veNos">Valor por Equipamento/Mês</label>
+                            <div class="input-wrapper currency">
+                                <input type="text" id="veNos" placeholder="0,00" data-type="currency">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="totalEquipNos">Total Mensal Equipamentos</label>
+                            <div class="input-wrapper currency">
+                                <input type="text" id="totalEquipNos" placeholder="0,00" readonly style="background: #e9ecef; cursor: not-allowed;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #2196F3;">
+                    <small><strong>💡 Dica:</strong> Os valores totais são calculados automaticamente (Quantidade × Valor por Equipamento)</small>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Comparação de Taxas</h2>
+                <div class="rate-columns">
+                    <div class="rate-column competitor">
+                        <h3>🏢 Concorrente</h3>
+                        <div class="input-group">
+                            <label for="tcDebito">Taxa Débito</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tcDebito" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tcCredVista">Taxa Crédito à Vista</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tcCredVista" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tcCred26">Taxa Crédito 2-6x</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tcCred26" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tcCred712">Taxa Crédito 7-12x</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tcCred712" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tcPix">Taxa Pix <span class="tooltip" data-tooltip="Taxa cobrada sobre as transações Pix pelo concorrente">ℹ️</span></label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tcPix" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rate-column ours">
+                        <h3>🚀 Nossa Proposta</h3>
+                        <div class="input-group">
+                            <label for="tnDebito">Taxa Débito</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tnDebito" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tnCredVista">Taxa Crédito à Vista</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tnCredVista" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tnCred26">Taxa Crédito 2-6x</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tnCred26" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tnCred712">Taxa Crédito 7-12x</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tnCred712" placeholder="0,00" data-type="percentage">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="tnPix">Taxa Pix</label>
+                            <div class="input-wrapper percentage">
+                                <input type="text" id="tnPix" value="0,00" readonly style="background: #e9ecef; cursor: not-allowed;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button class="clear-btn" onclick="limparCampos()">
+                🗑️ Limpar Campos
+            </button>
+
+            <div id="resultado" class="result"></div>
+        </div>
     </div>
 
-    <div class="content">
-      <!-- Faturamento -->
-      <div class="section">
-        <h2>📊 Faturamento Mensal</h2>
-        <div class="grid-4">
-          <div class="input-group">
-            <label for="fatDebito">Cartão de Débito</label>
-            <div class="input-wrapper currency">
-              <input type="text" id="fatDebito" placeholder="0,00" data-type="currency">
-            </div>
-          </div>
-          <div class="input-group">
-            <label for="fatCredVista">Crédito à Vista</label>
-            <div class="input-wrapper currency">
-              <input type="text" id="fatCredVista" placeholder="0,00" data-type="currency">
-            </div>
-          </div>
-          <div class="input-group">
-            <label for="fatCred26">Crédito 2-6x <span class="tooltip" data-tooltip="Parcelamento de 2 a 6 vezes">ℹ️</span></label>
-            <div class="input-wrapper currency">
-              <input type="text" id="fatCred26" placeholder="0,00" data-type="currency">
-            </div>
-          </div>
-          <div class="input-group">
-            <label for="fatCred712">Crédito 7-12x <span class="tooltip" data-tooltip="Parcelamento de 7 a 12 vezes">ℹ️</span></label>
-            <div class="input-wrapper currency">
-              <input type="text" id="fatCred712" placeholder="0,00" data-type="currency">
-            </div>
-          </div>
-        </div>
-      </div>
+    <script>
+        // Formatação automática dos campos
+        document.addEventListener('DOMContentLoaded', function() {
+            const currencyInputs = document.querySelectorAll('[data-type="currency"]');
+            const percentageInputs = document.querySelectorAll('[data-type="percentage"]');
+            const numberInputs = document.querySelectorAll('input[type="number"]');
 
-      <!-- Aluguel de Equipamentos -->
-      <div class="section">
-        <h2>🖥️ Aluguel de Equipamentos</h2>
-        <div class="rate-columns">
-          <!-- Concorrente Equipamentos -->
-          <div class="rate-column competitor">
-            <h3>🏢 Concorrente</h3>
-            <div class="input-group">
-              <label for="qeConc">Quantidade de Equipamentos</label>
-              <div class="input-wrapper">
-                <input type="number" id="qeConc" placeholder="0" min="0">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="veConc">Valor por Equipamento/Mês</label>
-              <div class="input-wrapper currency">
-                <input type="text" id="veConc" placeholder="0,00" data-type="currency">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="totalEquipConc">Total Mensal Equipamentos</label>
-              <div class="input-wrapper currency">
-                <input type="text" id="totalEquipConc" placeholder="0,00" readonly style="background: #e9ecef; cursor: not-allowed;">
-              </div>
-            </div>
-          </div>
+            // Formatação de moeda
+            currencyInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (e.target.readOnly) return;
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = (value / 100).toFixed(2);
+                    value = value.replace('.', ',');
+                    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    e.target.value = value;
+                    
+                    // Atualizar totais de equipamentos
+                    atualizarTotaisEquipamentos();
+                });
 
-          <!-- Nossa Equipamentos -->
-          <div class="rate-column ours">
-            <h3>🚀 Nossa Proposta</h3>
-            <div class="input-group">
-              <label for="qeNos">Quantidade de Equipamentos</label>
-              <div class="input-wrapper">
-                <input type="number" id="qeNos" placeholder="0" min="0">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="veNos">Valor por Equipamento/Mês</label>
-              <div class="input-wrapper currency">
-                <input type="text" id="veNos" placeholder="0,00" data-type="currency">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="totalEquipNos">Total Mensal Equipamentos</label>
-              <div class="input-wrapper currency">
-                <input type="text" id="totalEquipNos" placeholder="0,00" readonly style="background: #e9ecef; cursor: not-allowed;">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top: 15px; padding: 15px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #2196F3;">
-          <small><strong>💡 Dica:</strong> Os valores totais são calculados automaticamente (Quantidade × Valor por Equipamento)</small>
-        </div>
-      </div>
+                input.addEventListener('focus', function(e) {
+                    if (e.target.value === '0,00' && !e.target.readOnly) {
+                        e.target.value = '';
+                    }
+                });
 
-      <!-- Taxas -->
-      <div class="section">
-        <h2>📈 Comparação de Taxas</h2>
-        <div class="rate-columns">
-          <!-- Concorrente -->
-          <div class="rate-column competitor">
-            <h3>🏢 Concorrente</h3>
-            <div class="input-group">
-              <label for="tcDebito">Taxa Débito</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tcDebito" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tcCredVista">Taxa Crédito à Vista</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tcCredVista" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tcCred26">Taxa Crédito 2-6x</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tcCred26" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tcCred712">Taxa Crédito 7-12x</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tcCred712" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-          </div>
+                input.addEventListener('blur', function(e) {
+                    if (e.target.value === '' && !e.target.readOnly) {
+                        e.target.value = '0,00';
+                    }
+                });
+            });
 
-          <!-- Nossa -->
-          <div class="rate-column ours">
-            <h3>🚀 Nossa Proposta</h3>
-            <div class="input-group">
-              <label for="tnDebito">Taxa Débito</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tnDebito" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tnCredVista">Taxa Crédito à Vista</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tnCredVista" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tnCred26">Taxa Crédito 2-6x</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tnCred26" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="tnCred712">Taxa Crédito 7-12x</label>
-              <div class="input-wrapper percentage">
-                <input type="text" id="tnCred712" placeholder="0,00" data-type="percentage">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            // Formatação de percentual
+            percentageInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (e.target.readOnly) return; // Adicionado para Pix do Sicoob
+                    let value = e.target.value.replace(/[^\d,]/g, '');
+                    if (value.includes(',')) {
+                        let parts = value.split(',');
+                        if (parts[1] && parts[1].length > 2) {
+                            parts[1] = parts[1].substring(0, 2);
+                        }
+                        value = parts.join(',');
+                    }
+                    e.target.value = value;
+                });
 
+                input.addEventListener('focus', function(e) {
+                    if (e.target.value === '0,00' && !e.target.readOnly) { // Adicionado para Pix do Sicoob
+                        e.target.value = '';
+                    }
+                });
 
-      <button class="clear-btn" onclick="limparCampos()">
-        🗑️ Limpar Campos
-      </button>
+                input.addEventListener('blur', function(e) {
+                    if (e.target.value === '' && !e.target.readOnly) { // Adicionado para Pix do Sicoob
+                        e.target.value = '0,00';
+                    }
+                });
+            });
 
-      <div id="resultado" class="result"></div>
-    </div>
-  </div>
+            // Eventos para campos numéricos (quantidade de equipamentos)
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    // Permitir apenas números inteiros
+                    e.target.value = e.target.value.replace(/[^\d]/g, '');
+                    atualizarTotaisEquipamentos();
+                });
 
-  <script>
-    // Formatação automática dos campos
-    document.addEventListener('DOMContentLoaded', function() {
-      const currencyInputs = document.querySelectorAll('[data-type="currency"]');
-      const percentageInputs = document.querySelectorAll('[data-type="percentage"]');
-      const numberInputs = document.querySelectorAll('input[type="number"]');
+                input.addEventListener('blur', function(e) {
+                    if (e.target.value === '') {
+                        e.target.value = '0';
+                    }
+                });
+            });
 
-      // Formatação de moeda
-      currencyInputs.forEach(input => {
-        input.addEventListener('input', function(e) {
-          if (e.target.readOnly) return;
-          let value = e.target.value.replace(/\D/g, '');
-          value = (value / 100).toFixed(2);
-          value = value.replace('.', ',');
-          value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-          e.target.value = value;
-          
-          // Atualizar totais de equipamentos
-          atualizarTotaisEquipamentos();
+            // Inicializar valores
+            currencyInputs.forEach(input => {
+                if (!input.readOnly) {
+                    input.value = '0,00';
+                }
+            });
+            percentageInputs.forEach(input => input.value = '0,00');
+            numberInputs.forEach(input => input.value = '0');
+            
+            // Define a taxa Pix Sicoob como 0,00 e readonly
+            document.getElementById('tnPix').value = '0,00';
+            document.getElementById('tnPix').readOnly = true;
+
+            // Atualizar totais iniciais
+            atualizarTotaisEquipamentos();
         });
 
-        input.addEventListener('focus', function(e) {
-          if (e.target.value === '0,00' && !e.target.readOnly) {
-            e.target.value = '';
-          }
-        });
+        function atualizarTotaisEquipamentos() {
+            // Concorrente
+            const qtdConc = parseInt(document.getElementById('qeConc').value) || 0;
+            const valorConc = parseFormattedNumber(document.getElementById('veConc').value);
+            const totalConc = qtdConc * valorConc;
+            
+            // Nossa
+            const qtdNos = parseInt(document.getElementById('qeNos').value) || 0;
+            const valorNos = parseFormattedNumber(document.getElementById('veNos').value);
+            const totalNos = qtdNos * valorNos;
+            
+            // Formatar e exibir
+            document.getElementById('totalEquipConc').value = formatCurrencyInput(totalConc);
+            document.getElementById('totalEquipNos').value = formatCurrencyInput(totalNos);
+        }
 
-        input.addEventListener('blur', function(e) {
-          if (e.target.value === '' && !e.target.readOnly) {
-            e.target.value = '0,00';
-          }
-        });
-      });
+        function formatCurrencyInput(value) {
+            return value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
 
-      // Formatação de percentual
-      percentageInputs.forEach(input => {
-        input.addEventListener('input', function(e) {
-          let value = e.target.value.replace(/[^\d,]/g, '');
-          if (value.includes(',')) {
-            let parts = value.split(',');
-            if (parts[1] && parts[1].length > 2) {
-              parts[1] = parts[1].substring(0, 2);
+        function parseFormattedNumber(value) {
+            return parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
+        }
+
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
+        }
+
+        function calcularEconomia() {
+            // Captura faturamentos
+            const fat = {
+                debito: parseFormattedNumber(document.getElementById('fatDebito').value),
+                vista: parseFormattedNumber(document.getElementById('fatCredVista').value),
+                c26: parseFormattedNumber(document.getElementById('fatCred26').value),
+                c712: parseFormattedNumber(document.getElementById('fatCred712').value),
+                pix: parseFormattedNumber(document.getElementById('fatPix').value) // Novo: Faturamento Pix
+            };
+
+            // Captura taxas (convertendo % → decimal)
+            const tc = {
+                debito: parseFormattedNumber(document.getElementById('tcDebito').value) / 100,
+                vista: parseFormattedNumber(document.getElementById('tcCredVista').value) / 100,
+                c26: parseFormattedNumber(document.getElementById('tcCred26').value) / 100,
+                c712: parseFormattedNumber(document.getElementById('tcCred712').value) / 100,
+                pix: parseFormattedNumber(document.getElementById('tcPix').value) / 100 // Novo: Taxa Pix Concorrente
+            };
+
+            const tn = {
+                debito: parseFormattedNumber(document.getElementById('tnDebito').value) / 100,
+                vista: parseFormattedNumber(document.getElementById('tnCredVista').value) / 100,
+                c26: parseFormattedNumber(document.getElementById('tnCred26').value) / 100,
+                c712: parseFormattedNumber(document.getElementById('tnCred712').value) / 100,
+                pix: 0 // Sicoob Unicidades tem Pix isento, taxa é 0
+            };
+
+            // Captura dados de equipamentos
+            const equipConc = {
+                quantidade: parseInt(document.getElementById('qeConc').value) || 0,
+                valorUnit: parseFormattedNumber(document.getElementById('veConc').value),
+                total: parseFormattedNumber(document.getElementById('totalEquipConc').value)
+            };
+
+            const equipNos = {
+                quantidade: parseInt(document.getElementById('qeNos').value) || 0,
+                valorUnit: parseFormattedNumber(document.getElementById('veNos').value),
+                total: parseFormattedNumber(document.getElementById('totalEquipNos').value)
+            };
+
+            // Verificar se há dados suficientes
+            const totalFaturamento = fat.debito + fat.vista + fat.c26 + fat.c712 + fat.pix; // Inclui Pix
+            const temEquipamentos = equipConc.total > 0 || equipNos.total > 0;
+            
+            if (totalFaturamento === 0 && !temEquipamentos) {
+                document.getElementById('resultado').innerHTML = 
+                    '<div class="result-icon">⚠️</div><div class="result-value">Adicione valores de faturamento e/ou equipamentos para calcular</div>';
+                document.getElementById('resultado').className = 'result show negative';
+                return;
             }
-            value = parts.join(',');
-          }
-          e.target.value = value;
-        });
 
-        input.addEventListener('focus', function(e) {
-          if (e.target.value === '0,00') {
-            e.target.value = '';
-          }
-        });
+            // Cálculo de custos das taxas
+            const custoTaxasConc = fat.debito * tc.debito + fat.vista * tc.vista + fat.c26 * tc.c26 + fat.c712 * tc.c712 + fat.pix * tc.pix; // Inclui Pix
+            const custoTaxasNos = fat.debito * tn.debito + fat.vista * tn.vista + fat.c26 * tn.c26 + fat.c712 * tn.c712 + fat.pix * tn.pix; // Inclui Pix
 
-        input.addEventListener('blur', function(e) {
-          if (e.target.value === '') {
-            e.target.value = '0,00';
-          }
-        });
-      });
+            // Custo total (taxas + equipamentos)
+            const custoTotalConc = custoTaxasConc + equipConc.total;
+            const custoTotalNos = custoTaxasNos + equipNos.total;
 
-      // Eventos para campos numéricos (quantidade de equipamentos)
-      numberInputs.forEach(input => {
-        input.addEventListener('input', function(e) {
-          // Permitir apenas números inteiros
-          e.target.value = e.target.value.replace(/[^\d]/g, '');
-          atualizarTotaisEquipamentos();
-        });
+            // Economia/prejuízo
+            const economMensal = custoTotalConc - custoTotalNos;
+            const economAnual = economMensal * 12;
+            const economTaxas = custoTaxasConc - custoTaxasNos;
+            const economEquipamentos = equipConc.total - equipNos.total;
 
-        input.addEventListener('blur', function(e) {
-          if (e.target.value === '') {
-            e.target.value = '0';
-          }
-        });
-      });
+            // Monta resultado
+            const resultDiv = document.getElementById('resultado');
+            let html = '';
 
-      // Inicializar valores
-      currencyInputs.forEach(input => {
-        if (!input.readOnly) {
-          input.value = '0,00';
-        }
-      });
-      percentageInputs.forEach(input => input.value = '0,00');
-      numberInputs.forEach(input => input.value = '0');
-      
-      // Atualizar totais iniciais
-      atualizarTotaisEquipamentos();
-    });
+            if (economMensal >= 0) {
+                html = `
+                    <div class="result-icon">🎉</div>
+                    <div><strong>Parabéns! Você vai economizar:</strong></div>
+                    <div class="result-value">${formatCurrency(economMensal)} por mês</div>
+                    <div class="result-value">${formatCurrency(economAnual)} por ano</div>
+                    
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <h4>Custo Total Atual</h4>
+                            <div class="value">${formatCurrency(custoTotalConc)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Custo Total Conosco</h4>
+                            <div class="value">${formatCurrency(custoTotalNos)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Economia em Taxas</h4>
+                            <div class="value">${formatCurrency(economTaxas)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Economia em Equipamentos</h4>
+                            <div class="value">${formatCurrency(economEquipamentos)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (totalFaturamento > 0) {
+                    html += `
+                        <div class="summary-cards" style="margin-top: 15px;">
+                            <div class="summary-card">
+                                <h4>Faturamento Total</h4>
+                                <div class="value">${formatCurrency(totalFaturamento)}</div>
+                            </div>
+                            <div class="summary-card">
+                                <h4>Taxa Média Atual (%)</h4>
+                                <div class="value">${totalFaturamento > 0 ? ((custoTaxasConc / totalFaturamento) * 100).toFixed(2) : 0}%</div>
+                            </div>
+                            <div class="summary-card">
+                                <h4>Nossa Taxa Média (%)</h4>
+                                <div class="value">${totalFaturamento > 0 ? ((custoTaxasNos / totalFaturamento) * 100).toFixed(2) : 0}%</div>
+                            </div>
+                        </div>
+                    `;
+                }
 
-    function atualizarTotaisEquipamentos() {
-      // Concorrente
-      const qtdConc = parseInt(document.getElementById('qeConc').value) || 0;
-      const valorConc = parseFormattedNumber(document.getElementById('veConc').value);
-      const totalConc = qtdConc * valorConc;
-      
-      // Nossa
-      const qtdNos = parseInt(document.getElementById('qeNos').value) || 0;
-      const valorNos = parseFormattedNumber(document.getElementById('veNos').value);
-      const totalNos = qtdNos * valorNos;
-      
-      // Formatar e exibir
-      document.getElementById('totalEquipConc').value = formatCurrencyInput(totalConc);
-      document.getElementById('totalEquipNos').value = formatCurrencyInput(totalNos);
-    }
+                if (temEquipamentos) {
+                    html += `
+                        <div class="summary-cards" style="margin-top: 15px;">
+                            <div class="summary-card">
+                                <h4>Equipamentos Concorrente</h4>
+                                <div class="value">${equipConc.quantidade} unidades</div>
+                            </div>
+                            <div class="summary-card">
+                                <h4>Equipamentos Nossa Proposta</h4>
+                                <div class="value">${equipNos.quantidade} unidades</div>
+                            </div>
+                        </div>
+                    `;
+                }
 
-    function formatCurrencyInput(value) {
-      return value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    }
+                resultDiv.className = 'result show positive';
+            } else {
+                html = `
+                    <div class="result-icon">⚠️</div>
+                    <div><strong>Neste cenário, você teria um custo adicional de:</strong></div>
+                    <div class="result-value">${formatCurrency(-economMensal)} por mês</div>
+                    <div class="result-value">${formatCurrency(-economAnual)} por ano</div>
+                    
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <h4>Custo Total Atual</h4>
+                            <div class="value">${formatCurrency(custoTotalConc)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Custo Total Conosco</h4>
+                            <div class="value">${formatCurrency(custoTotalNos)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Diferença em Taxas</h4>
+                            <div class="value">${formatCurrency(economTaxas)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Diferença em Equipamentos</h4>
+                            <div class="value">${formatCurrency(economEquipamentos)}</div>
+                        </div>
+                    </div>
+                `;
+                resultDiv.className = 'result show negative';
+            }
 
-    function parseFormattedNumber(value) {
-      return parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
-    }
-
-    function formatCurrency(value) {
-      return value.toLocaleString('pt-BR', { 
-        style: 'currency', 
-        currency: 'BRL' 
-      });
-    }
-
-    function calcularEconomia() {
-      // Captura faturamentos
-      const fat = {
-        debito: parseFormattedNumber(document.getElementById('fatDebito').value),
-        vista: parseFormattedNumber(document.getElementById('fatCredVista').value),
-        c26: parseFormattedNumber(document.getElementById('fatCred26').value),
-        c712: parseFormattedNumber(document.getElementById('fatCred712').value)
-      };
-
-      // Captura taxas (convertendo % → decimal)
-      const tc = {
-        debito: parseFormattedNumber(document.getElementById('tcDebito').value) / 100,
-        vista: parseFormattedNumber(document.getElementById('tcCredVista').value) / 100,
-        c26: parseFormattedNumber(document.getElementById('tcCred26').value) / 100,
-        c712: parseFormattedNumber(document.getElementById('tcCred712').value) / 100
-      };
-
-      const tn = {
-        debito: parseFormattedNumber(document.getElementById('tnDebito').value) / 100,
-        vista: parseFormattedNumber(document.getElementById('tnCredVista').value) / 100,
-        c26: parseFormattedNumber(document.getElementById('tnCred26').value) / 100,
-        c712: parseFormattedNumber(document.getElementById('tnCred712').value) / 100
-      };
-
-      // Captura dados de equipamentos
-      const equipConc = {
-        quantidade: parseInt(document.getElementById('qeConc').value) || 0,
-        valorUnit: parseFormattedNumber(document.getElementById('veConc').value),
-        total: parseFormattedNumber(document.getElementById('totalEquipConc').value)
-      };
-
-      const equipNos = {
-        quantidade: parseInt(document.getElementById('qeNos').value) || 0,
-        valorUnit: parseFormattedNumber(document.getElementById('veNos').value),
-        total: parseFormattedNumber(document.getElementById('totalEquipNos').value)
-      };
-
-      // Verificar se há dados suficientes
-      const totalFaturamento = fat.debito + fat.vista + fat.c26 + fat.c712;
-      const temEquipamentos = equipConc.total > 0 || equipNos.total > 0;
-      
-      if (totalFaturamento === 0 && !temEquipamentos) {
-        document.getElementById('resultado').innerHTML = 
-          '<div class="result-icon">⚠️</div><div class="result-value">Adicione valores de faturamento e/ou equipamentos para calcular</div>';
-        document.getElementById('resultado').className = 'result show negative';
-        return;
-      }
-
-      // Cálculo de custos das taxas
-      const custoTaxasConc = fat.debito * tc.debito + fat.vista * tc.vista + fat.c26 * tc.c26 + fat.c712 * tc.c712;
-      const custoTaxasNos = fat.debito * tn.debito + fat.vista * tn.vista + fat.c26 * tn.c26 + fat.c712 * tn.c712;
-
-      // Custo total (taxas + equipamentos)
-      const custoTotalConc = custoTaxasConc + equipConc.total;
-      const custoTotalNos = custoTaxasNos + equipNos.total;
-
-      // Economia/prejuízo
-      const economMensal = custoTotalConc - custoTotalNos;
-      const economAnual = economMensal * 12;
-      const economTaxas = custoTaxasConc - custoTaxasNos;
-      const economEquipamentos = equipConc.total - equipNos.total;
-
-      // Monta resultado
-      const resultDiv = document.getElementById('resultado');
-      let html = '';
-
-      if (economMensal >= 0) {
-        html = `
-          <div class="result-icon">🎉</div>
-          <div><strong>Parabéns! Você vai economizar:</strong></div>
-          <div class="result-value">${formatCurrency(economMensal)} por mês</div>
-          <div class="result-value">${formatCurrency(economAnual)} por ano</div>
-          
-          <div class="summary-cards">
-            <div class="summary-card">
-              <h4>Custo Total Atual</h4>
-              <div class="value">${formatCurrency(custoTotalConc)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Custo Total Conosco</h4>
-              <div class="value">${formatCurrency(custoTotalNos)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Economia em Taxas</h4>
-              <div class="value">${formatCurrency(economTaxas)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Economia em Equipamentos</h4>
-              <div class="value">${formatCurrency(economEquipamentos)}</div>
-            </div>
-          </div>
-        `;
-        
-        if (totalFaturamento > 0) {
-          html += `
-            <div class="summary-cards" style="margin-top: 15px;">
-              <div class="summary-card">
-                <h4>Faturamento Total</h4>
-                <div class="value">${formatCurrency(totalFaturamento)}</div>
-              </div>
-              <div class="summary-card">
-                <h4>Taxa Atual (%)</h4>
-                <div class="value">${totalFaturamento > 0 ? ((custoTaxasConc / totalFaturamento) * 100).toFixed(2) : 0}%</div>
-              </div>
-              <div class="summary-card">
-                <h4>Nossa Taxa (%)</h4>
-                <div class="value">${totalFaturamento > 0 ? ((custoTaxasNos / totalFaturamento) * 100).toFixed(2) : 0}%</div>
-              </div>
-            </div>
-          `;
+            resultDiv.innerHTML = html;
         }
 
-        if (temEquipamentos) {
-          html += `
-            <div class="summary-cards" style="margin-top: 15px;">
-              <div class="summary-card">
-                <h4>Equipamentos Concorrente</h4>
-                <div class="value">${equipConc.quantidade} unidades</div>
-              </div>
-              <div class="summary-card">
-                <h4>Equipamentos Nossa Proposta</h4>
-                <div class="value">${equipNos.quantidade} unidades</div>
-              </div>
-            </div>
-          `;
+        function limparCampos() {
+            const currencyInputs = document.querySelectorAll('[data-type="currency"]');
+            const percentageInputs = document.querySelectorAll('[data-type="percentage"]');
+            const numberInputs = document.querySelectorAll('input[type="number"]'); 
+            
+            currencyInputs.forEach(input => {
+                if (!input.readOnly) {
+                    input.value = '0,00';
+                }
+            });
+            percentageInputs.forEach(input => {
+                if (!input.readOnly) {
+                    input.value = '0,00';
+                }
+            });
+            numberInputs.forEach(input => input.value = '0'); 
+            
+            // Restaura a taxa Pix Sicoob como 0,00
+            document.getElementById('tnPix').value = '0,00';
+            
+            const resultDiv = document.getElementById('resultado');
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '';
+            
+            // Garante que os totais de equipamentos sejam atualizados após a limpeza
+            atualizarTotaisEquipamentos();
         }
 
-        resultDiv.className = 'result show positive';
-      } else {
-        html = `
-          <div class="result-icon">⚠️</div>
-          <div><strong>Neste cenário, você teria um custo adicional de:</strong></div>
-          <div class="result-value">${formatCurrency(-economMensal)} por mês</div>
-          <div class="result-value">${formatCurrency(-economAnual)} por ano</div>
-          
-          <div class="summary-cards">
-            <div class="summary-card">
-              <h4>Custo Total Atual</h4>
-              <div class="value">${formatCurrency(custoTotalConc)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Custo Total Conosco</h4>
-              <div class="value">${formatCurrency(custoTotalNos)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Diferença em Taxas</h4>
-              <div class="value">${formatCurrency(economTaxas)}</div>
-            </div>
-            <div class="summary-card">
-              <h4>Diferença em Equipamentos</h4>
-              <div class="value">${formatCurrency(economEquipamentos)}</div>
-            </div>
-          </div>
-        `;
-        resultDiv.className = 'result show negative';
-      }
-
-      resultDiv.innerHTML = html;
-    }
-
-    function limparCampos() {
-      const currencyInputs = document.querySelectorAll('[data-type="currency"]');
-      const percentageInputs = document.querySelectorAll('[data-type="percentage"]');
-      
-      currencyInputs.forEach(input => input.value = '0,00');
-      percentageInputs.forEach(input => input.value = '0,00');
-      
-      const resultDiv = document.getElementById('resultado');
-      resultDiv.className = 'result';
-      resultDiv.innerHTML = '';
-    }
-
-    // Calcular automaticamente quando qualquer campo for alterado
-    document.addEventListener('input', function(e) {
-      if (e.target.matches('input')) {
-        // Delay para permitir que a formatação seja aplicada
-        setTimeout(() => {
-          // Verificar se há dados suficientes antes de calcular automaticamente
-          const hasData = Array.from(document.querySelectorAll('input')).some(input => {
-            const value = parseFormattedNumber(input.value);
-            return value > 0;
-          });
-          
-          if (hasData) {
-            calcularEconomia();
-          }
-        }, 100);
-      }
-    });
-  </script>
+        // Calcular automaticamente quando qualquer campo for alterado
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input') && !e.target.readOnly) { 
+                // Delay para permitir que a formatação seja aplicada
+                setTimeout(() => {
+                    // Verificar se há dados suficientes antes de calcular automaticamente
+                    const hasData = Array.from(document.querySelectorAll('input')).some(input => {
+                        if (input.readOnly) return false; 
+                        const value = parseFormattedNumber(input.value);
+                        return value > 0;
+                    });
+                    
+                    if (hasData) {
+                        calcularEconomia();
+                    } else {
+                        // Se não houver dados, limpa o resultado
+                        document.getElementById('resultado').className = 'result';
+                        document.getElementById('resultado').innerHTML = '';
+                    }
+                }, 100);
+            }
+        });
+    </script>
 </body>
 </html>
