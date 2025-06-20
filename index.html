@@ -10,12 +10,14 @@
             padding: 0;
             box-sizing: border-box;
         }
- 
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #003641 10%, #7db61c 100%);
             min-height: 100vh;
             padding: 20px;
+            display: flex; /* Adicionado para flexbox no body */
+            flex-direction: column; /* Coloca os elementos em coluna */
         }
 
         .container {
@@ -26,6 +28,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             backdrop-filter: blur(10px);
+            flex-grow: 1; /* Permite que o container principal cresça e ocupe o espaço */
         }
 
         .header {
@@ -33,6 +36,20 @@
             color: white;
             padding: 30px 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header img.logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            padding: 5px 10px;
         }
 
         .header h1 {
@@ -333,6 +350,23 @@
             background: #5a6268;
         }
 
+        /* --- Estilos do Rodapé --- */
+        footer {
+            margin-top: 40px; /* Espaço do conteúdo para o rodapé */
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.2); /* Fundo sutil para o rodapé */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        footer p {
+            margin: 0;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+
         @media (max-width: 768px) {
             .grid-2, .rate-columns {
                 grid-template-columns: 1fr;
@@ -354,6 +388,10 @@
             }
             .result-main-economy .value {
                 font-size: 2rem;
+            }
+
+            .header img.logo {
+                max-width: 150px; /* Reduz o tamanho da logo em telas pequenas */
             }
         }
 
@@ -389,6 +427,7 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="https://intranet.sicoobunicidades.com.br/sys/conteudo/dados/2025-05/horizontal-colorido-verde-19052025-161444.png" alt="Logo Sicoob Unicidades" class="logo">
             <h1>💰 Simulador de Economia Sicoob</h1>
             <p>Compare taxas e descubra quanto você pode economizar</p>
         </div>
@@ -555,7 +594,6 @@
                 </div>
             </div>
 
-
             <button class="clear-btn" onclick="limparCampos()">
                 🗑️ Limpar Campos
             </button>
@@ -563,6 +601,10 @@
             <div id="resultado" class="result"></div>
         </div>
     </div>
+
+    <footer>
+        <p>Desenvolvido por Inteligência Competitiva Sicoob Unicidades</p>
+    </footer>
 
     <script>
         // Formatação automática dos campos
@@ -713,7 +755,7 @@
                 vista: parseFormattedNumber(document.getElementById('tnCredVista').value) / 100,
                 c26: parseFormattedNumber(document.getElementById('tnCred26').value) / 100,
                 c712: parseFormattedNumber(document.getElementById('tnCred712').value) / 100,
-                pix: 0 // Sicoob Unicidades tem Pix isento, taxa é 0
+                pix: 0 
             };
 
             // Captura dados de equipamentos
@@ -753,7 +795,7 @@
             const economAnual = economMensal * 12;
             const economTaxas = custoTaxasConc - custoTaxasNos;
             const economEquipamentos = equipConc.total - equipNos.total;
-            const economPix = fat.pix * tc.pix; // Economia específica do Pix (porque Sicoob é 0)
+            const economPix = fat.pix * tc.pix; 
 
 
             // Monta resultado
