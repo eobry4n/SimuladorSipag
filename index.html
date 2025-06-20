@@ -211,6 +211,7 @@
             transform: translateY(0);
         }
 
+        /* --- Estilos da Seção de Resultado Melhorada --- */
         .result {
             margin-top: 30px;
             padding: 25px;
@@ -221,6 +222,9 @@
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
+            background: white; /* Cor de fundo padrão */
+            border: 2px solid #e1e5e9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .result.show {
@@ -231,54 +235,86 @@
         .result.positive {
             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
-            border: 2px solid #c3e6cb;
+            border-color: #a3c9a8; /* Borda mais verde */
         }
 
         .result.negative {
             background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
-            border: 2px solid #f5c6cb;
+            border-color: #d6b0b5; /* Borda mais vermelha */
         }
 
-        .result-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 10px 0;
+        .result-main-economy {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .result-icon {
-            font-size: 2rem;
+        .result-main-economy .icon {
+            font-size: 3rem;
             margin-bottom: 10px;
         }
 
-        .summary-cards {
+        .result-main-economy .title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .result.positive .result-main-economy .title {
+            color: #155724;
+        }
+        .result.negative .result-main-economy .title {
+            color: #721c24;
+        }
+
+        .result-main-economy .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #667eea; /* Cor principal */
+        }
+        .result.positive .result-main-economy .value {
+            color: #28a745; /* Verde para economia */
+        }
+        .result.negative .result-main-economy .value {
+            color: #dc3545; /* Vermelho para custo adicional */
+        }
+
+        .result-summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-top: 20px;
         }
 
-        .summary-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        .summary-card-new {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             text-align: center;
-            border-left: 4px solid #667eea;
+            border: 1px solid #e1e5e9;
         }
-
-        .summary-card h4 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+        .summary-card-new h4 {
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        .summary-card .value {
-            font-size: 1.3rem;
+        .summary-card-new .value {
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #667eea;
+            color: #49479d;
+        }
+        .summary-card-new.positive .value {
+            color: #28a745;
+        }
+        .summary-card-new.negative .value {
+            color: #dc3545;
         }
 
         .clear-btn {
@@ -312,6 +348,12 @@
             
             .section {
                 padding: 20px 15px;
+            }
+            .result-summary-grid {
+                grid-template-columns: 1fr; /* Em telas menores, uma coluna */
+            }
+            .result-main-economy .value {
+                font-size: 2rem;
             }
         }
 
@@ -559,7 +601,7 @@
             // Formatação de percentual
             percentageInputs.forEach(input => {
                 input.addEventListener('input', function(e) {
-                    if (e.target.readOnly) return; // Adicionado para Pix do Sicoob
+                    if (e.target.readOnly) return; 
                     let value = e.target.value.replace(/[^\d,]/g, '');
                     if (value.includes(',')) {
                         let parts = value.split(',');
@@ -572,13 +614,13 @@
                 });
 
                 input.addEventListener('focus', function(e) {
-                    if (e.target.value === '0,00' && !e.target.readOnly) { // Adicionado para Pix do Sicoob
+                    if (e.target.value === '0,00' && !e.target.readOnly) { 
                         e.target.value = '';
                     }
                 });
 
                 input.addEventListener('blur', function(e) {
-                    if (e.target.value === '' && !e.target.readOnly) { // Adicionado para Pix do Sicoob
+                    if (e.target.value === '' && !e.target.readOnly) { 
                         e.target.value = '0,00';
                     }
                 });
@@ -654,7 +696,7 @@
                 vista: parseFormattedNumber(document.getElementById('fatCredVista').value),
                 c26: parseFormattedNumber(document.getElementById('fatCred26').value),
                 c712: parseFormattedNumber(document.getElementById('fatCred712').value),
-                pix: parseFormattedNumber(document.getElementById('fatPix').value) // Novo: Faturamento Pix
+                pix: parseFormattedNumber(document.getElementById('fatPix').value) 
             };
 
             // Captura taxas (convertendo % → decimal)
@@ -663,7 +705,7 @@
                 vista: parseFormattedNumber(document.getElementById('tcCredVista').value) / 100,
                 c26: parseFormattedNumber(document.getElementById('tcCred26').value) / 100,
                 c712: parseFormattedNumber(document.getElementById('tcCred712').value) / 100,
-                pix: parseFormattedNumber(document.getElementById('tcPix').value) / 100 // Novo: Taxa Pix Concorrente
+                pix: parseFormattedNumber(document.getElementById('tcPix').value) / 100 
             };
 
             const tn = {
@@ -688,7 +730,7 @@
             };
 
             // Verificar se há dados suficientes
-            const totalFaturamento = fat.debito + fat.vista + fat.c26 + fat.c712 + fat.pix; // Inclui Pix
+            const totalFaturamento = fat.debito + fat.vista + fat.c26 + fat.c712 + fat.pix; 
             const temEquipamentos = equipConc.total > 0 || equipNos.total > 0;
             
             if (totalFaturamento === 0 && !temEquipamentos) {
@@ -699,8 +741,8 @@
             }
 
             // Cálculo de custos das taxas
-            const custoTaxasConc = fat.debito * tc.debito + fat.vista * tc.vista + fat.c26 * tc.c26 + fat.c712 * tc.c712 + fat.pix * tc.pix; // Inclui Pix
-            const custoTaxasNos = fat.debito * tn.debito + fat.vista * tn.vista + fat.c26 * tn.c26 + fat.c712 * tn.c712 + fat.pix * tn.pix; // Inclui Pix
+            const custoTaxasConc = fat.debito * tc.debito + fat.vista * tc.vista + fat.c26 * tc.c26 + fat.c712 * tc.c712 + fat.pix * tc.pix; 
+            const custoTaxasNos = fat.debito * tn.debito + fat.vista * tn.vista + fat.c26 * tn.c26 + fat.c712 * tn.c712 + fat.pix * tn.pix; 
 
             // Custo total (taxas + equipamentos)
             const custoTotalConc = custoTaxasConc + equipConc.total;
@@ -711,6 +753,8 @@
             const economAnual = economMensal * 12;
             const economTaxas = custoTaxasConc - custoTaxasNos;
             const economEquipamentos = equipConc.total - equipNos.total;
+            const economPix = fat.pix * tc.pix; // Economia específica do Pix (porque Sicoob é 0)
+
 
             // Monta resultado
             const resultDiv = document.getElementById('resultado');
@@ -718,25 +762,31 @@
 
             if (economMensal >= 0) {
                 html = `
-                    <div class="result-icon">🎉</div>
-                    <div><strong>Parabéns! Você vai economizar:</strong></div>
-                    <div class="result-value">${formatCurrency(economMensal)} por mês</div>
-                    <div class="result-value">${formatCurrency(economAnual)} por ano</div>
+                    <div class="result-main-economy">
+                        <div class="icon">🎉</div>
+                        <div class="title">Parabéns! Você vai economizar:</div>
+                        <div class="value">${formatCurrency(economMensal)} por mês</div>
+                        <div class="value">${formatCurrency(economAnual)} por ano</div>
+                    </div>
                     
-                    <div class="summary-cards">
-                        <div class="summary-card">
+                    <div class="result-summary-grid">
+                        <div class="summary-card-new">
                             <h4>Custo Total Atual</h4>
                             <div class="value">${formatCurrency(custoTotalConc)}</div>
                         </div>
-                        <div class="summary-card">
+                        <div class="summary-card-new">
                             <h4>Custo Total Conosco</h4>
                             <div class="value">${formatCurrency(custoTotalNos)}</div>
                         </div>
-                        <div class="summary-card">
-                            <h4>Economia em Taxas</h4>
-                            <div class="value">${formatCurrency(economTaxas)}</div>
+                        <div class="summary-card-new positive">
+                            <h4>Economia em Taxas de Cartão</h4>
+                            <div class="value">${formatCurrency(economTaxas - economPix)}</div>
                         </div>
-                        <div class="summary-card">
+                        <div class="summary-card-new positive">
+                            <h4>Economia em Pix</h4>
+                            <div class="value">${formatCurrency(economPix)}</div>
+                        </div>
+                        <div class="summary-card-new positive">
                             <h4>Economia em Equipamentos</h4>
                             <div class="value">${formatCurrency(economEquipamentos)}</div>
                         </div>
@@ -745,16 +795,16 @@
                 
                 if (totalFaturamento > 0) {
                     html += `
-                        <div class="summary-cards" style="margin-top: 15px;">
-                            <div class="summary-card">
+                        <div class="result-summary-grid" style="margin-top: 15px;">
+                            <div class="summary-card-new">
                                 <h4>Faturamento Total</h4>
                                 <div class="value">${formatCurrency(totalFaturamento)}</div>
                             </div>
-                            <div class="summary-card">
+                            <div class="summary-card-new">
                                 <h4>Taxa Média Atual (%)</h4>
                                 <div class="value">${totalFaturamento > 0 ? ((custoTaxasConc / totalFaturamento) * 100).toFixed(2) : 0}%</div>
                             </div>
-                            <div class="summary-card">
+                            <div class="summary-card-new">
                                 <h4>Nossa Taxa Média (%)</h4>
                                 <div class="value">${totalFaturamento > 0 ? ((custoTaxasNos / totalFaturamento) * 100).toFixed(2) : 0}%</div>
                             </div>
@@ -764,12 +814,12 @@
 
                 if (temEquipamentos) {
                     html += `
-                        <div class="summary-cards" style="margin-top: 15px;">
-                            <div class="summary-card">
+                        <div class="result-summary-grid" style="margin-top: 15px;">
+                            <div class="summary-card-new">
                                 <h4>Equipamentos Concorrente</h4>
                                 <div class="value">${equipConc.quantidade} unidades</div>
                             </div>
-                            <div class="summary-card">
+                            <div class="summary-card-new">
                                 <h4>Equipamentos Nossa Proposta</h4>
                                 <div class="value">${equipNos.quantidade} unidades</div>
                             </div>
@@ -780,25 +830,31 @@
                 resultDiv.className = 'result show positive';
             } else {
                 html = `
-                    <div class="result-icon">⚠️</div>
-                    <div><strong>Neste cenário, você teria um custo adicional de:</strong></div>
-                    <div class="result-value">${formatCurrency(-economMensal)} por mês</div>
-                    <div class="result-value">${formatCurrency(-economAnual)} por ano</div>
+                    <div class="result-main-economy">
+                        <div class="icon">⚠️</div>
+                        <div class="title">Neste cenário, você teria um custo adicional de:</div>
+                        <div class="value">${formatCurrency(-economMensal)} por mês</div>
+                        <div class="value">${formatCurrency(-economAnual)} por ano</div>
+                    </div>
                     
-                    <div class="summary-cards">
-                        <div class="summary-card">
+                    <div class="result-summary-grid">
+                        <div class="summary-card-new">
                             <h4>Custo Total Atual</h4>
                             <div class="value">${formatCurrency(custoTotalConc)}</div>
                         </div>
-                        <div class="summary-card">
+                        <div class="summary-card-new">
                             <h4>Custo Total Conosco</h4>
                             <div class="value">${formatCurrency(custoTotalNos)}</div>
                         </div>
-                        <div class="summary-card">
-                            <h4>Diferença em Taxas</h4>
-                            <div class="value">${formatCurrency(economTaxas)}</div>
+                        <div class="summary-card-new negative">
+                            <h4>Diferença em Taxas de Cartão</h4>
+                            <div class="value">${formatCurrency(economTaxas - economPix)}</div>
                         </div>
-                        <div class="summary-card">
+                        <div class="summary-card-new negative">
+                            <h4>Diferença em Pix</h4>
+                            <div class="value">${formatCurrency(economPix)}</div>
+                        </div>
+                        <div class="summary-card-new negative">
                             <h4>Diferença em Equipamentos</h4>
                             <div class="value">${formatCurrency(economEquipamentos)}</div>
                         </div>
